@@ -1,34 +1,4 @@
-FROM alpine:latest
 
-MAINTAINER Charles Ma <jihua.ma@gmail.com>
-
-# Java Version and other ENV
-ENV JAVA_VERSION_MAJOR=8 \
-    JAVA_VERSION_MINOR=181 \
-    JAVA_VERSION_BUILD=13 \
-    JAVA_PACKAGE=jdk \
-    JAVA_HOME=/opt/jdk \
-    PATH=${PATH}:/opt/jdk/bin \
-    GLIBC_REPO=https://github.com/sgerrand/alpine-pkg-glibc \
-    GLIBC_VERSION=2.33-r0 \
-    LANG=C.UTF-8
-RUN set -ex && \
-    apk -U upgrade && \
-    apk add libstdc++ curl ca-certificates bash java-cacerts && \
-    wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
-    apk add glibc-${GLIBC_VERSION}.apk && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk && \
-    apk add glibc-bin-${GLIBC_VERSION}.apk glibc-i18n-${GLIBC_VERSION}.apk && \
-    rm -v *.apk && \
-    /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 && \
-    curl -o /tmp/java.tar.gz \
-    https://mirrors.huaweicloud.com/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz && \
-    gunzip /tmp/java.tar.gz && \
-    tar -C /opt -xf /tmp/java.tar && \
-"Dockerfile" 66L, 3279C 已写入                                                                      
-zagt@zagt-faceplus:~/docker-alpine-java$ cat Dockerfile 
 FROM alpine:latest
 
 MAINTAINER Charles Ma <jihua.ma@gmail.com>
