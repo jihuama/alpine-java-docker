@@ -25,7 +25,7 @@ RUN set -ex && \
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-i18n-2.33-r0.apk && \
     apk add glibc-bin-2.33-r0.apk glibc-i18n-2.33-r0.apk && \
     rm -v *.apk && \
-    /usr/glibc-compat/bin/localedef -i POSIX -f UTF-8 C.UTF-8 && \
+    /usr/glibc-compat/bin/localedef  -i en_US -f UTF-8 en_US.UTF-8 && \
     curl -o /tmp/java.tar.gz \
       https://mirrors.huaweicloud.com/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz && \
     gunzip /tmp/java.tar.gz && \
