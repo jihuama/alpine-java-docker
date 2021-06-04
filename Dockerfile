@@ -32,6 +32,7 @@ RUN set -ex && \
     tar -C /opt -xf /tmp/java.tar && \
     ln -s /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR} /opt/jdk && \
     find /opt/jdk/ -maxdepth 1 -mindepth 1 | grep -v jre | xargs rm -rf && \
+    cd /opt/jdk/ && ln -s ./jre/bin ./bin && \
     sed -i s/#networkaddress.cache.ttl=-1/networkaddress.cache.ttl=10/ $JAVA_HOME/jre/lib/security/java.security && \
     apk del curl glibc-i18n && \
     rm -rf /opt/jdk/jre/plugin \
