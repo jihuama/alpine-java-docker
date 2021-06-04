@@ -1,9 +1,6 @@
-# AlpineLinux with a glibc-2.29-r0 and Oracle Java 8
 FROM alpine:latest
 
 MAINTAINER Charles Ma <jihua.ma@gmail.com>
-# thanks to Anastas Dancha <anapsix@random.io> Vladimir Krivosheev <develar@gmail.com> aka @develar for smaller image
-# and Victor Palma <palma.victor@gmail.com> aka @devx for pointing it out
 
 # Java Version and other ENV
 ENV JAVA_VERSION_MAJOR=8 \
@@ -18,18 +15,17 @@ ENV JAVA_VERSION_MAJOR=8 \
     LANG=C.UTF-8
 RUN echo -e "https://mirror.tuna.tsinghua.edu.cn/alpine/v3.13/main\n\
 https://mirror.tuna.tsinghua.edu.cn/alpine/v3.13/community" > /etc/apk/repositories
-# do all in one step
 RUN set -ex && \
-    [[ ${JAVA_VERSION_MAJOR} != 7 ]] || ( echo >&2 'Oracle no longer publishes JAVA7 packages' && exit 1 ) && \
     apk -U upgrade && \
     apk add libstdc++ curl ca-certificates bash java-cacerts && \
     wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    for pkg in glibc-${GLIBC_VERSION} glibc-bin-${GLIBC_VERSION} glibc-i18n-${GLIBC_VERSION}; do curl -sSL ${GLIBC_REPO}/releases/download/${GLIBC_VERSION}/${pkg}.apk -o /tmp/${pkg}.apk; done && \
-    apk add /tmp/*.apk && \
-    rm -v /tmp/*.apk && \
-    ( /usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 C.UTF-8 || true ) && \
-    echo "export LANG=C.UTF-8" > /etc/profile.d/locale.sh && \
-    /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk && \
+    apk add glibc-2.33-r0.apk && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-bin-2.33-r0.apk && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-i18n-2.33-r0.apk && \
+    apk add glibc-bin-2.33-r0.apk glibc-i18n-2.33-r0.apk && \
+    rm -v *.apk && \
+    /usr/glibc-compat/bin/localedef -i POSIX -f UTF-8 C.UTF-8 && \
     curl -o /tmp/java.tar.gz \
       https://mirrors.huaweicloud.com/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz && \
     gunzip /tmp/java.tar.gz && \
@@ -68,3 +64,4 @@ RUN set -ex && \
            /tmp/* /var/cache/apk/* && \
     ln -sf /etc/ssl/certs/java/cacerts $JAVA_HOME/jre/lib/security/cacerts && \
     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
+    
