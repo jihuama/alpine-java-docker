@@ -1,4 +1,3 @@
-
 FROM alpine:latest
 
 MAINTAINER Charles Ma <jihua.ma@gmail.com>
@@ -12,9 +11,7 @@ ENV JAVA_VERSION_MAJOR=8 \
     PATH=${PATH}:/opt/jdk/bin \
     GLIBC_REPO=https://github.com/sgerrand/alpine-pkg-glibc \
     GLIBC_VERSION=2.33-r0 \
-    LANG=C.UTF-8
-RUN echo -e "https://mirror.tuna.tsinghua.edu.cn/alpine/v3.13/main\n\
-https://mirror.tuna.tsinghua.edu.cn/alpine/v3.13/community" > /etc/apk/repositories
+    LANG=zh_CN.UTF-8
 RUN set -ex && \
     apk -U upgrade && \
     apk add libstdc++ curl ca-certificates bash java-cacerts && \
@@ -25,7 +22,7 @@ RUN set -ex && \
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk && \
     apk add glibc-bin-${GLIBC_VERSION}.apk glibc-i18n-${GLIBC_VERSION}.apk && \
     rm -v *.apk && \
-    /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 && \
+    /usr/glibc-compat/bin/localedef -i zh_CN -f UTF-8 zh_CN.UTF-8 && \
     curl -o /tmp/java.tar.gz \
     https://mirrors.huaweicloud.com/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz && \
     gunzip /tmp/java.tar.gz && \
